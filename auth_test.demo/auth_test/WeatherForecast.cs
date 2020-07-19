@@ -1,6 +1,6 @@
 using System;
 
-namespace testing_authO
+namespace auth_test
 {
     public class WeatherForecast
     {

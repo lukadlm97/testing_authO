@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace testing_authO.Controllers
+namespace auth_test.Controllers
 {
     [ApiController]
     [Route("[controller]")]

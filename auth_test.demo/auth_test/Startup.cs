@@ -10,9 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using testing_authO.demo.Models;
 
-namespace testing_authO
+namespace auth_test
 {
     public class Startup
     {
@@ -27,8 +26,6 @@ namespace testing_authO
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-
-            services.AddSingleton<AuthDbContextFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
