@@ -1,4 +1,5 @@
-﻿using auth_test.demo.Domain.Models;
+﻿using auth_test.demo.Domain.Helpers;
+using auth_test.demo.Domain.Models;
 using auth_test.demo.Domain.Services;
 using auth_test.demo.Entityframework;
 using Microsoft.EntityFrameworkCore;
@@ -54,7 +55,7 @@ namespace auth_test.demo.Services
             user.Token = tokenHandler.WriteToken(token);
 
             Debug.WriteLine("User successfully authentificate.");
-            return user;
+            return user.WithoutPassword();
         }
 
         public async Task<User> Create(User user)
@@ -75,7 +76,9 @@ namespace auth_test.demo.Services
 
         public async  Task<IEnumerable<User>> GetAll()
         {
-            return await _context.Users.ToListAsync();
+            var users =  _context.Users;
+            
+            return users.WithoutPasswords();
         }
     
     }
