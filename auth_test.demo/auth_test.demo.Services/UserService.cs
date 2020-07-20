@@ -3,9 +3,13 @@ using auth_test.demo.Domain.Services;
 using auth_test.demo.Entityframework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,26 +19,42 @@ namespace auth_test.demo.Services
     public class UserService : IUserService
     {
         private readonly AuthContext _context;
+        private readonly AppSettings _appSettings;
 
-        public UserService(AuthContext context)
+        public UserService(AuthContext context,IOptions<AppSettings> options)
         {
             _context = context;
+            _appSettings = options.Value;
         }
 
         public async Task<User> Authentificate(string username, string password)
         {
-            var users = await GetAll();
+            var user = await _context.Users
+                .SingleOrDefaultAsync(x => x.Username == username && x.Password==password);
 
-            foreach(User u in users)
+            if (user == null)
             {
-                if (u.Username == username && u.Password == password)
-                {
-                    Debug.WriteLine("User successfully authentificate.");
-                    return u;
-                }
+                Debug.WriteLine("User doesnt authentificate.");
+                return null;
             }
-            Debug.WriteLine("User doesnt authentificate.");
-            return null;
+           
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.Id.ToString()),
+                    new Claim(ClaimTypes.Role, user.Role)
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            user.Token = tokenHandler.WriteToken(token);
+
+            Debug.WriteLine("User successfully authentificate.");
+            return user;
         }
 
         public async Task<User> Create(User user)
