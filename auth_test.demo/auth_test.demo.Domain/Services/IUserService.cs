@@ -10,6 +10,6 @@ namespace auth_test.demo.Domain.Services
     {
         Task<IEnumerable<User>> GetAll();
         Task<User> Create(User user);
-        Task<User> Authentificate(string username, string password);
+        User Authentificate(string username, string password);
     }
 }

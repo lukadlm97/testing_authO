@@ -28,12 +28,12 @@ namespace auth_test.demo.Services
             _appSettings = options.Value;
         }
 
-        public async Task<User> Authentificate(string username, string password)
+        public User Authentificate(string username, string password)
         {
-            var user = await _context.Users
+            var user =  _context.Users
                 .SingleOrDefaultAsync(x => x.Username == username && x.Password==password);
 
-            if (user == null)
+            if (user.Result == null)
             {
                 Debug.WriteLine("User doesnt authentificate.");
                 return null;
@@ -45,17 +45,17 @@ namespace auth_test.demo.Services
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString()),
-                    new Claim(ClaimTypes.Role, user.Role)
+                    new Claim(ClaimTypes.Name, user.Result.Id.ToString()),
+                    new Claim(ClaimTypes.Role,user.Result.Role)
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            user.Token = tokenHandler.WriteToken(token);
+            user.Result.Token = tokenHandler.WriteToken(token);
 
             Debug.WriteLine("User successfully authentificate.");
-            return user.WithoutPassword();
+            return user.Result.WithoutPassword();
         }
 
         public async Task<User> Create(User user)
