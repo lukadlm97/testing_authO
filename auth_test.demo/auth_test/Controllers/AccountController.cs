@@ -16,18 +16,21 @@ namespace auth_test.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IPasswordService _passwordService;
 
-        public AccountController(IUserService userService)
+        public AccountController(IUserService userService,IPasswordService passwordService)
         {
             _userService = userService;
-            
+            _passwordService = passwordService;
         }
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody]AuthenticateModel model)
         {
-            var user = _userService.Authentificate(model.Username, model.Password);
+            var hashedPassword = _passwordService.ComputePasswordHash(model.Password);
+
+            var user = _userService.Authentificate(model.Username, hashedPassword);
 
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
@@ -39,8 +42,15 @@ namespace auth_test.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]RegisterModel model)
         {
+            var user = (User) model;
+            user.Password = _passwordService.ComputePasswordHash(model.Password);
 
-            return null;
+            var savedUser = _userService.Create(user);
+
+            if (savedUser == null)
+                return BadRequest();
+
+            return Ok(savedUser);
         }
 
         [Authorize(Roles =Role.Admin)]
