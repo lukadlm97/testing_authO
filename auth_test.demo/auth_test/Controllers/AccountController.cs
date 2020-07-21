@@ -34,7 +34,15 @@ namespace auth_test.Controllers
 
             return Ok(user);
         }
-        
+
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody]RegisterModel model)
+        {
+
+            return null;
+        }
+
         [Authorize(Roles =Role.Admin)]
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
