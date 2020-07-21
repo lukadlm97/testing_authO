@@ -11,5 +11,6 @@ namespace auth_test.demo.Domain.Services
         Task<IEnumerable<User>> GetAll();
         Task<User> Create(User user);
         User Authentificate(string username, string password);
+        bool DoesUserExist(string username);
     }
 }

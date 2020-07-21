@@ -66,12 +66,22 @@ namespace auth_test.demo.Services
                 await _context.SaveChangesAsync();
                 Debug.WriteLine("User successfully created.");
 
-                return createdResult.Entity;
+                return createdResult.Entity.WithoutPassword();
             }catch(Exception e)
             {
                 Debug.WriteLine("Exception: " + e.Message);
                 return null;
             }
+        }
+
+        public bool DoesUserExist(string username)
+        {
+            var user = _context.Users.SingleOrDefaultAsync(x => x.Username == username);
+
+            if (user.Result == null)
+                return false;
+
+            return true;
         }
 
         public async  Task<IEnumerable<User>> GetAll()

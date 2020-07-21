@@ -42,15 +42,21 @@ namespace auth_test.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]RegisterModel model)
         {
+            if (_userService.DoesUserExist(model.Username))
+                return BadRequest(new
+                {
+                    message="username exist in system."
+                });
+
             var user = (User) model;
             user.Password = _passwordService.ComputePasswordHash(model.Password);
 
             var savedUser = _userService.Create(user);
 
-            if (savedUser == null)
+            if (savedUser.Result == null)
                 return BadRequest();
 
-            return Ok(savedUser);
+            return Ok(savedUser.Result);
         }
 
         [Authorize(Roles =Role.Admin)]
