@@ -90,6 +90,20 @@ namespace auth_test.demo.Services
             
             return users.WithoutPasswords();
         }
-    
+
+        public IEnumerable<User> SetUsers(IEnumerable<User> users)
+        {
+            List<User> setedUsers = new List<User>();
+
+            foreach(User u  in users)
+            {
+                var user = _context.Users.SingleOrDefaultAsync(us => us.Id == u.Id);
+                if (user == null)
+                    return null;
+                setedUsers.Add(user.Result);
+            }
+
+            return setedUsers;
+        }
     }
 }

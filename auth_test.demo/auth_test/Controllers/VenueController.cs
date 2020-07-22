@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using auth_test.demo.Domain.Models;
 using auth_test.demo.Domain.Services;
+using auth_test.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,12 @@ namespace auth_test.Controllers
     public class VenueController : ControllerBase
     {
         private readonly IDataService<Venue> _venueService;
+        private readonly IUserService _userService;
 
-        public VenueController(IDataService<Venue> venueService)
+        public VenueController(IDataService<Venue> venueService,IUserService userService)
         {
             _venueService = venueService;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -33,6 +36,30 @@ namespace auth_test.Controllers
                 });
 
             return Ok(venues);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = Role.SuperAdmin)]
+        public async Task<IActionResult> CreateVenue([FromBody] VenueModel model)
+        {
+            var venue = (Venue)model;
+
+            var setedAdmins = _userService.SetUsers(model.Admins);
+            if (setedAdmins == null)
+                return NotFound(new
+                {
+                    message = "Error with admins privilage"
+                });
+            venue.Admins = setedAdmins;
+
+            var createdEntity = _venueService.Insert(venue);
+            if (createdEntity == null)
+                return BadRequest(new
+                {
+                    message = "problem with creating venue"
+                });
+
+            return Ok(createdEntity);
         }
     }
 }

@@ -8,10 +8,8 @@ namespace auth_test.ViewModels
 {
     public class AuthenticateModel
     {
-        [StringLength(50,MinimumLength = 8)]
         [Required]
         public string Username { get; set; }
-        [StringLength(50, MinimumLength = 8)]
         [Required]
         public string Password { get; set; }
     }
