@@ -18,5 +18,6 @@ namespace auth_test.demo.Entityframework
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Venue> Venues { get; set; }
     }
 }
