@@ -27,7 +27,7 @@ namespace auth_test.demo.Services
         public IEnumerable<Venue> GetAll()
         {
             return _context.Venues
-                            .Include(x => x.Admins);
+                            .Include(x=>x.Admins);
         }
 
         public Venue Insert(Venue entity)

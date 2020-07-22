@@ -40,5 +40,6 @@ namespace auth_test.ViewModels
                 Token = null
             };
         }
+    
     }
 }

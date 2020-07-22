@@ -12,5 +12,6 @@ namespace auth_test.demo.Domain.Models
         public string Password { get; set; }
         public string Role { get; set; }
         public string Token { get; set; }
+      
     }
 }
