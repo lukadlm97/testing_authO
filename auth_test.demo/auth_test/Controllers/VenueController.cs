@@ -61,5 +61,6 @@ namespace auth_test.Controllers
 
             return Ok(createdEntity);
         }
+
     }
 }
