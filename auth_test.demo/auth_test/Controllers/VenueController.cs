@@ -38,7 +38,7 @@ namespace auth_test.Controllers
             return Ok(venues);
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         [Authorize(Roles = Role.SuperAdmin)]
         public async Task<IActionResult> CreateVenue([FromBody] VenueModel model)
         {
