@@ -61,6 +61,39 @@ namespace auth_test.Controllers
 
             return Ok(createdEntity);
         }
+        [HttpDelete("{id}")]
+        [Authorize(Roles = Role.SuperAdmin)]
+        public async Task<IActionResult> DeleteVenue(int id)
+        {
+            if (_venueService.Delete(id))
+            {
+                return Ok(new
+                {
+                    message = "Venue has successfully deleted!"
+                });
+            }
+            return BadRequest(new
+            {
+                message = "Venue has't successfully deleted!"
+            });
+        }
+        
+        [HttpPut("{id}")]
+        [Authorize(Roles = Role.SuperAdmin)]
+        public async Task<IActionResult> UpdateVenue(int id,[FromBody]VenueModel model)
+        {
+            var venue = (Venue)model;
+            var updatedVenue = _venueService.Update(id, venue);
 
+            if (updatedVenue == null)
+            {
+                return BadRequest(new
+                {
+                    message="Venue not updated!"
+                });
+            }
+
+            return Ok(updatedVenue);
+        }
     }
 }
