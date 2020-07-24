@@ -12,6 +12,6 @@ namespace auth_test.demo.Domain.Services
         T Insert(T entity);
         T Update(int id, T entity);
         bool Delete(int id);
-
+        T GetById(int id);
     }
 }

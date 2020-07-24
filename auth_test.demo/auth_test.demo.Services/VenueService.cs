@@ -5,6 +5,7 @@ using auth_test.demo.Services.Common;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace auth_test.demo.Services
@@ -30,6 +31,16 @@ namespace auth_test.demo.Services
                             .Include(x=>x.Admins);
         }
 
+        public Venue GetById(int id)
+        {
+            var venue = _context.Venues
+                                    .SingleOrDefault(v => v.Id == id);
+            if (venue == null)
+                return null;
+
+            return venue;
+        }
+
         public Venue Insert(Venue entity)
         {
             return _nonQueryDataService
@@ -41,5 +52,6 @@ namespace auth_test.demo.Services
             return _nonQueryDataService
                              .Update(id, entity).Result;
         }
+
     }
 }

@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\auth_test.demo.Domain\auth_test.demo.Domain.csproj" />
     <ProjectReference Include="..\auth_test.demo.Entityframework\auth_test.demo.Entityframework.csproj" />
     <ProjectReference Include="..\auth_test.demo.Services\auth_test.demo.Services.csproj" />
   </ItemGroup>

@@ -95,5 +95,20 @@ namespace auth_test.Controllers
 
             return Ok(updatedVenue);
         }
+        [HttpGet("{id}")]
+        [Authorize(Roles =Role.Admin+","+Role.SuperAdmin)]
+        public async Task<IActionResult> GetTablesForVenue(int id)
+        {
+            var venue = _venueService.GetById(id);
+
+            if (venue == null)
+                return NotFound(new
+                {
+                    message = "Venue with this id doesn't find."
+                });
+
+            return Ok(venue);
+        }
+
     }
 }
