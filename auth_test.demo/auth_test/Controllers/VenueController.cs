@@ -17,11 +17,13 @@ namespace auth_test.Controllers
     {
         private readonly IDataService<Venue> _venueService;
         private readonly IUserService _userService;
+        private readonly ITables _tableService;
 
-        public VenueController(IDataService<Venue> venueService,IUserService userService)
+        public VenueController(IDataService<Venue> venueService,IUserService userService,ITables tablesServices)
         {
             _venueService = venueService;
             _userService = userService;
+            _tableService = tablesServices;
         }
 
         [HttpGet]
@@ -109,6 +111,48 @@ namespace auth_test.Controllers
 
             return Ok(venue);
         }
+        [HttpPost("{id}/addtable")]
+        [Authorize(Roles = Role.Admin + "," + Role.SuperAdmin)]
+        public async Task<IActionResult> AddNewTable(int id,[FromBody] TableModel model)
+        {
+            var table = (TablePlace)model;
 
+            var createdTable = _tableService.AddNewTable(table, id);
+
+            if (createdTable == null)
+                return BadRequest(new
+                {
+                    message = "Can't add table"
+                });
+
+            return Ok(createdTable);
+        }
+        [HttpPut("{idVenue}/tables/{idTable}")]
+        [Authorize(Roles = Role.Admin + "," + Role.SuperAdmin)]
+        public async Task<IActionResult> UpdateTable(int idVenue,int idTable,[FromBody] TableModel model)
+        {
+            var table = (TablePlace)model;
+
+            var updatedTable = _tableService.UpdatedTable(idVenue,idTable,table);
+
+            if (updatedTable == null)
+                return BadRequest(new
+                {
+                    message = "Can't update table"
+                });
+
+            return Ok(updatedTable);
+        }
+        [HttpDelete("{idVenue}/tables/{idTable}")]
+        [Authorize(Roles = Role.Admin + "," + Role.SuperAdmin)]
+        public async Task<IActionResult> DeleteTable(int idVenue,int idTable)
+        {
+            if (_tableService.DeleteTable(idVenue, idTable))
+                return Ok();
+            return BadRequest(new
+            {
+                message = "Can't delete table"
+            });
+        }
     }
 }
