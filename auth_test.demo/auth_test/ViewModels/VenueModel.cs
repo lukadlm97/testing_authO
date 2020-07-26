@@ -17,6 +17,7 @@ namespace auth_test.ViewModels
         public string ClosedTime { get; set; }
         public DateTime DateJoined { get; set; }
         public IEnumerable<User> Admins { get; set; }
+        public VenueType VenueType { get; set; }
 
         public static implicit operator Venue(VenueModel model)
         {
@@ -27,7 +28,9 @@ namespace auth_test.ViewModels
                 Address = model.Address,
                 OpenTime = model.OpenTime,
                 ClosedTime = model.ClosedTime,
-                DateJoined = DateTime.Now
+                DateJoined = model.DateJoined,
+             //   Admins = model.Admins,
+                VenueType = model.VenueType
             };
         }
 

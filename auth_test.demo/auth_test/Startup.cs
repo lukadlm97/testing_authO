@@ -72,6 +72,7 @@ namespace auth_test
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPasswordService, PasswordService>();
             services.AddScoped<IDataService<Venue>, VenueService>();
+            services.AddScoped<ITables, TablesService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

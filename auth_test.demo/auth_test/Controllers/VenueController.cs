@@ -45,6 +45,7 @@ namespace auth_test.Controllers
         public async Task<IActionResult> CreateVenue([FromBody] VenueModel model)
         {
             var venue = (Venue)model;
+            venue.DateJoined = DateTime.Now;
 
             var setedAdmins = _userService.SetUsers(model.Admins);
             if (setedAdmins == null)
@@ -85,6 +86,15 @@ namespace auth_test.Controllers
         public async Task<IActionResult> UpdateVenue(int id,[FromBody]VenueModel model)
         {
             var venue = (Venue)model;
+
+            var setedAdmins = _userService.SetUsers(model.Admins);
+            if (setedAdmins == null)
+                return NotFound(new
+                {
+                    message = "Error with admins privilage"
+                });
+            venue.Admins = setedAdmins;
+
             var updatedVenue = _venueService.Update(id, venue);
 
             if (updatedVenue == null)

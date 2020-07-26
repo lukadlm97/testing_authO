@@ -28,13 +28,15 @@ namespace auth_test.demo.Services
         public IEnumerable<Venue> GetAll()
         {
             return _context.Venues
-                            .Include(x=>x.Admins);
+                            .Include(x=>x.Admins)
+                            .Include(x=>x.Tables);
         }
 
         public Venue GetById(int id)
         {
-            var venue = _context.Venues
-                                    .SingleOrDefault(v => v.Id == id);
+            var venue = GetAll()
+                            .FirstOrDefault(x=>x.Id == id);
+            
             if (venue == null)
                 return null;
 
